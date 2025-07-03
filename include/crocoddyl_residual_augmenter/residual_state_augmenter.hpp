@@ -44,7 +44,7 @@ class CostModelResidualAugmenterTpl : public CostModelAbstractTpl<_Scalar> {
    * @param[in] activation  Activation model
    * @param[in] residual    Residual model
    */
-  CostModelResidualAugmenterTpl(const std::shared_ptr<Base>& model);
+  CostModelResidualAugmenterTpl(const std::shared_ptr<Base> &model);
 
   virtual ~CostModelResidualAugmenterTpl();
 
@@ -56,9 +56,9 @@ class CostModelResidualAugmenterTpl : public CostModelAbstractTpl<_Scalar> {
    * @param[in] x     State point \f$\mathbf{x}\in\mathbb{R}^{ndx}\f$
    * @param[in] u     Control input \f$\mathbf{u}\in\mathbb{R}^{nu}\f$
    */
-  virtual void calc(const std::shared_ptr<CostDataAbstract>& data,
-                    const Eigen::Ref<const VectorXs>& x,
-                    const Eigen::Ref<const VectorXs>& u);
+  virtual void calc(const std::shared_ptr<CostDataAbstract> &data,
+                    const Eigen::Ref<const VectorXs> &x,
+                    const Eigen::Ref<const VectorXs> &u);
 
   /**
    * @brief Forward state and control to compute the residual cost
@@ -70,8 +70,8 @@ class CostModelResidualAugmenterTpl : public CostModelAbstractTpl<_Scalar> {
    * @param[in] data  Residual cost data
    * @param[in] x     State point \f$\mathbf{x}\in\mathbb{R}^{ndx}\f$
    */
-  virtual void calc(const std::shared_ptr<CostDataAbstract>& data,
-                    const Eigen::Ref<const VectorXs>& x);
+  virtual void calc(const std::shared_ptr<CostDataAbstract> &data,
+                    const Eigen::Ref<const VectorXs> &x);
 
   /**
    * @brief Forward state and control to compute the derivatives
@@ -81,9 +81,9 @@ class CostModelResidualAugmenterTpl : public CostModelAbstractTpl<_Scalar> {
    * @param[in] x     State point \f$\mathbf{x}\in\mathbb{R}^{ndx}\f$
    * @param[in] u     Control input \f$\mathbf{u}\in\mathbb{R}^{nu}\f$
    */
-  virtual void calcDiff(const std::shared_ptr<CostDataAbstract>& data,
-                        const Eigen::Ref<const VectorXs>& x,
-                        const Eigen::Ref<const VectorXs>& u);
+  virtual void calcDiff(const std::shared_ptr<CostDataAbstract> &data,
+                        const Eigen::Ref<const VectorXs> &x,
+                        const Eigen::Ref<const VectorXs> &u);
 
   /**
    * @brief Forward state and control to compute the derivatives
@@ -96,26 +96,26 @@ class CostModelResidualAugmenterTpl : public CostModelAbstractTpl<_Scalar> {
    * @param[in] data  Residual cost data
    * @param[in] x     State point \f$\mathbf{x}\in\mathbb{R}^{ndx}\f$
    */
-  virtual void calcDiff(const std::shared_ptr<CostDataAbstract>& data,
-                        const Eigen::Ref<const VectorXs>& x);
+  virtual void calcDiff(const std::shared_ptr<CostDataAbstract> &data,
+                        const Eigen::Ref<const VectorXs> &x);
 
   /**
    * @brief Create the residual cost data of both this and inner model
    */
   virtual std::shared_ptr<CostDataAbstract> createData(
-      DataCollectorAbstract* const data);
+      DataCollectorAbstract *const data);
 
   /**
    * @brief Print relevant information of the cost-residual model
    *
    * @param[out] os  Output stream object
    */
-  virtual void print(std::ostream& os) const;
+  virtual void print(std::ostream &os) const;
 
   /**
    * @brief Return the inner cost model
    */
-  const std::shared_ptr<Base>& get_wrapped_model() const;
+  const std::shared_ptr<Base> &get_wrapped_model() const;
 
  protected:
   using Base::activation_;
@@ -137,9 +137,11 @@ struct CostDataResidualAugmenterTpl : public CostDataAbstractTpl<_Scalar> {
   typedef DataCollectorAbstractTpl<Scalar> DataCollectorAbstract;
 
   template <template <typename Scalar> class Model>
-  CostDataResidualAugmenterTpl(Model<Scalar>* const model,
-                               DataCollectorAbstract* const data)
-      : Base(model, data) {}
+  CostDataResidualAugmenterTpl(Model<Scalar> *const model,
+                               DataCollectorAbstract *const shared_data)
+      : Base(model, shared_data) {
+    wrapped_data = model->get_wrapped_model()->createData(shared_data);
+  }
 
   using Base::activation;
   using Base::cost;
