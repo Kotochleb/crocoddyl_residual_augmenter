@@ -1,11 +1,16 @@
 #ifndef CROCODDYL_RESIDUAL_AUGMENTER__RESIDUAL_STATE_AUGMENTER_HPP_
 #define CROCODDYL_RESIDUAL_AUGMENTER__RESIDUAL_STATE_AUGMENTER_HPP_
 
+#include "crocoddyl_residual_augmenter/fwd.hpp"
+// include fwd first
+
 #include <crocoddyl/core/cost-base.hpp>
 #include <crocoddyl/core/fwd.hpp>
 #include <crocoddyl/core/residual-base.hpp>
 
 namespace residual_augmenter {
+
+using namespace crocoddyl;
 
 /**
  * @brief Residual-based cost wrapper reducing state dimension

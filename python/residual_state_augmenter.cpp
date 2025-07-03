@@ -1,10 +1,11 @@
 #include "crocoddyl_residual_augmenter/residual_state_augmenter.hpp"
 
-#include "python/crocoddyl/core/core.hpp"
-#include "python/crocoddyl/utils/copyable.hpp"
+#include "crocoddyl_residual_augmenter/python.hpp"
 
-namespace crocoddyl {
+namespace residual_augmenter {
 namespace python {
+
+namespace bp = boost::python;
 
 void exposeCostResidualAugmenter() {
   bp::register_ptr_to_python<std::shared_ptr<CostModelResidualAugmenter>>();
@@ -12,18 +13,17 @@ void exposeCostResidualAugmenter() {
   bp::class_<CostModelResidualAugmenter, bp::bases<CostModelAbstract>>(
       "CostModelResidualAugmenter",
       "Class wrapping standard crocoddyl::CostModelResidualAugmenter class, "
-      "hiding",
-      "extended state vector from inner class allowing it to work with custom",
-      "actuation models. Assumes first state variables are preserved as q and "
-      "dq.",
-      bp::init<std::shared_ptr<CostModelAbstract>>(
+      "hiding extended state vector from inner class allowing it to work with "
+      "custom actuation models. Assumes first state variables are preserved as "
+      "q and dq.",
+      bp::init<std::shared_ptr<CostModelAbstract> &>(
           bp::args("self", "cost"),
           "Initialize the residual cost model.\n\n"
           ":param cost: Cost Model object to wrap with state reduction."))
       .def<void (CostModelResidualAugmenter::*)(
-          const std::shared_ptr<CostDataAbstract>&,
-          const Eigen::Ref<const Eigen::VectorXd>&,
-          const Eigen::Ref<const Eigen::VectorXd>&)>(
+          const std::shared_ptr<CostDataAbstract> &,
+          const Eigen::Ref<const Eigen::VectorXd> &,
+          const Eigen::Ref<const Eigen::VectorXd> &)>(
           "calc", &CostModelResidualAugmenter::calc,
           bp::args("self", "data", "x", "u"),
           "Forward state and control to compute the residual cost of the inner "
@@ -32,8 +32,8 @@ void exposeCostResidualAugmenter() {
           ":param x: state point (dim. state.nx)\n"
           ":param u: control input (dim. nu)")
       .def<void (CostModelResidualAugmenter::*)(
-          const std::shared_ptr<CostDataAbstract>&,
-          const Eigen::Ref<const Eigen::VectorXd>&)>(
+          const std::shared_ptr<CostDataAbstract> &,
+          const Eigen::Ref<const Eigen::VectorXd> &)>(
           "calc", &CostModelAbstract::calc, bp::args("self", "data", "x"),
           "Forward state and control to compute the residual cost of "
           "the inner model with respect to the state only.\n\n"
@@ -43,9 +43,9 @@ void exposeCostResidualAugmenter() {
           ":param data: cost data\n"
           ":param x: state point (dim. state.nx)")
       .def<void (CostModelResidualAugmenter::*)(
-          const std::shared_ptr<CostDataAbstract>&,
-          const Eigen::Ref<const Eigen::VectorXd>&,
-          const Eigen::Ref<const Eigen::VectorXd>&)>(
+          const std::shared_ptr<CostDataAbstract> &,
+          const Eigen::Ref<const Eigen::VectorXd> &,
+          const Eigen::Ref<const Eigen::VectorXd> &)>(
           "calcDiff", &CostModelResidualAugmenter::calcDiff,
           bp::args("self", "data", "x", "u"),
           "Forward state and control to compute the derivatives of the inner "
@@ -55,8 +55,8 @@ void exposeCostResidualAugmenter() {
           ":param x: state point (dim. state.nx)\n"
           ":param u: control input (dim. nu)")
       .def<void (CostModelResidualAugmenter::*)(
-          const std::shared_ptr<CostDataAbstract>&,
-          const Eigen::Ref<const Eigen::VectorXd>&)>(
+          const std::shared_ptr<CostDataAbstract> &,
+          const Eigen::Ref<const Eigen::VectorXd> &)>(
           "calcDiff", &CostModelAbstract::calcDiff,
           bp::args("self", "data", "x"),
           "Forward state and control to compute the derivatives of the inner "
@@ -81,14 +81,13 @@ void exposeCostResidualAugmenter() {
           "wrapped_model",
           bp::make_function(&CostModelResidualAugmenter::get_wrapped_model,
                             bp::return_value_policy<bp::return_by_value>()),
-          "Inner cost model")
-      .def(CopyableVisitor<CostModelResidualAugmenter>());
+          "Inner cost model");
 
   bp::register_ptr_to_python<std::shared_ptr<CostDataResidualAugmenter>>();
 
   bp::class_<CostDataResidualAugmenter, bp::bases<CostDataAbstract>>(
       "CostDataResidualAugmenter", "Data for residual cost.\n\n",
-      bp::init<CostModelResidualAugmenter*, DataCollectorAbstract*>(
+      bp::init<CostModelResidualAugmenter *, DataCollectorAbstract *>(
           bp::args("self", "model", "data"),
           "Create residual cost data.\n\n"
           ":param model: residual cost model\n"
@@ -98,9 +97,8 @@ void exposeCostResidualAugmenter() {
           "wrapped_data",
           bp::make_getter(&CostDataResidualAugmenter::wrapped_data,
                           bp::return_value_policy<bp::return_by_value>()),
-          "Inner cost model's data")
-      .def(CopyableVisitor<CostDataResidualAugmenter>());
+          "Inner cost model's data");
 }
 
 }  // namespace python
-}  // namespace crocoddyl
+}  // namespace residual_augmenter
