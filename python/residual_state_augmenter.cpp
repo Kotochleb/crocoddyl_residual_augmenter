@@ -3,6 +3,7 @@
 #include "crocoddyl_residual_augmenter/python.hpp"
 
 namespace residual_augmenter {
+
 namespace python {
 
 namespace bp = boost::python;

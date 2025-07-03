@@ -1,6 +1,6 @@
 #include "crocoddyl_residual_augmenter/python.hpp"
 
-BOOST_PYTHON_MODULE(residual_augmenter) {
+BOOST_PYTHON_MODULE(crocoddyl_residual_augmenter) {
   namespace bp = boost::python;
 
   bp::import("crocoddyl");
